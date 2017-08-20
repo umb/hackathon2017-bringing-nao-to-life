@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.9.0">
+  <bpmn:collaboration id="UMBNaoWatson">
+    <bpmn:participant id="Participant_1lvl0pz" name="NAO Roboter" processRef="umbnaowatson" />
+  </bpmn:collaboration>
+  <bpmn:process id="umbnaowatson" name="UMBNaoWatson" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="NAO activated">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="ch.umb.hackathon.naowatson.listener.NaoStartAppListener" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_1h9zcuz</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_07kxtf7" name="Move Forward" camunda:asyncBefore="true" camunda:class="ch.umb.hackathon.naowatson.delegate.MoveForward">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript"><![CDATA[execution.setVariable("steps", 5);]]></camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0w3hxq4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_14ovhpo</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_0ltovgm" name="Welcome and Say Hello" camunda:asyncBefore="true" camunda:class="ch.umb.hackathon.naowatson.delegate.Greetings">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript"><![CDATA[execution.setVariable("speech", "Hello everybody! How are you doing? I welcome you here in Stoos. My name is Nao. I am a humanoide robot and I work for U-M-B. You can ask me any questions about U-M-B."); ]]></camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_14ovhpo</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1team72</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_072uffj" name="Dialog" camunda:asyncBefore="true" camunda:class="ch.umb.hackathon.naowatson.delegate.Dialog">
+      <bpmn:incoming>SequenceFlow_1team72</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_19isyov</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_0yksra3" name="Turn Left" camunda:asyncBefore="true" camunda:class="ch.umb.hackathon.naowatson.delegate.TurnLeft">
+      <bpmn:incoming>SequenceFlow_0xwyzsr</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0w3hxq4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ServiceTask_1dw9iz7" name="Say Goodbye" camunda:asyncBefore="true" camunda:class="ch.umb.hackathon.naowatson.delegate.Greetings">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript"><![CDATA[execution.setVariable("speech", "Goodbye everybody! It was excellent meeting you guys. Hope to see you soon.");]]></camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_19isyov</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1fwpvfm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_0huovpl" name="Move Backwards" camunda:asyncBefore="true" camunda:class="ch.umb.hackathon.naowatson.delegate.MoveForward">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript"><![CDATA[execution.setVariable("steps",-5);]]></camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1fwpvfm</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1qg92l0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_1ual27b" name="Move Forward" camunda:asyncBefore="true" camunda:class="ch.umb.hackathon.naowatson.delegate.MoveForward">
+      <bpmn:incoming>SequenceFlow_1h9zcuz</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0xwyzsr</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1h9zcuz" sourceRef="StartEvent_1" targetRef="Task_1ual27b" />
+    <bpmn:sequenceFlow id="SequenceFlow_0w3hxq4" sourceRef="Task_0yksra3" targetRef="Task_07kxtf7" />
+    <bpmn:sequenceFlow id="SequenceFlow_14ovhpo" sourceRef="Task_07kxtf7" targetRef="Task_0ltovgm" />
+    <bpmn:sequenceFlow id="SequenceFlow_1team72" sourceRef="Task_0ltovgm" targetRef="Task_072uffj" />
+    <bpmn:sequenceFlow id="SequenceFlow_19isyov" sourceRef="Task_072uffj" targetRef="ServiceTask_1dw9iz7" />
+    <bpmn:sequenceFlow id="SequenceFlow_0xwyzsr" sourceRef="Task_1ual27b" targetRef="Task_0yksra3" />
+    <bpmn:sequenceFlow id="SequenceFlow_1fwpvfm" sourceRef="ServiceTask_1dw9iz7" targetRef="Task_0huovpl" />
+    <bpmn:sequenceFlow id="SequenceFlow_1qg92l0" sourceRef="Task_0huovpl" targetRef="Task_11kd6i1" />
+    <bpmn:endEvent id="EndEvent_1n1lw1i" name="NAO deactivated">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="ch.umb.hackathon.naowatson.listener.NaoStopAppListener" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1sfds7z</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Task_11kd6i1" name="Turn Left" camunda:asyncBefore="true" camunda:class="ch.umb.hackathon.naowatson.delegate.TurnLeft">
+      <bpmn:incoming>SequenceFlow_1qg92l0</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_04x2chf</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_0hinpcw" name="Move Forward" camunda:asyncBefore="true" camunda:class="ch.umb.hackathon.naowatson.delegate.MoveForward">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript"><![CDATA[execution.setVariable("steps", 50);]]></camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_04x2chf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1sfds7z</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1sfds7z" sourceRef="Task_0hinpcw" targetRef="EndEvent_1n1lw1i" />
+    <bpmn:sequenceFlow id="SequenceFlow_04x2chf" sourceRef="Task_11kd6i1" targetRef="Task_0hinpcw" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="UMBNaoWatson">
+      <bpmndi:BPMNShape id="Participant_1lvl0pz_di" bpmnElement="Participant_1lvl0pz">
+        <dc:Bounds x="-715" y="43" width="1705" height="223" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="-633" y="126" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-650" y="162" width="71" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1h9zcuz_di" bpmnElement="SequenceFlow_1h9zcuz">
+        <di:waypoint xsi:type="dc:Point" x="-597" y="144" />
+        <di:waypoint xsi:type="dc:Point" x="-534" y="144" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-610.5" y="123" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_14ovhpo_di" bpmnElement="SequenceFlow_14ovhpo">
+        <di:waypoint xsi:type="dc:Point" x="-108" y="144" />
+        <di:waypoint xsi:type="dc:Point" x="-52" y="144" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-125" y="123" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1team72_di" bpmnElement="SequenceFlow_1team72">
+        <di:waypoint xsi:type="dc:Point" x="48" y="144" />
+        <di:waypoint xsi:type="dc:Point" x="98" y="144" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="28" y="123" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1n1lw1i_di" bpmnElement="EndEvent_1n1lw1i">
+        <dc:Bounds x="870" y="126" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="847" y="166" width="84" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_19isyov_di" bpmnElement="SequenceFlow_19isyov">
+        <di:waypoint xsi:type="dc:Point" x="198" y="144" />
+        <di:waypoint xsi:type="dc:Point" x="260" y="144" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="184" y="123" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1erjut1_di" bpmnElement="Task_0yksra3" bioc:stroke="#1E88E5" bioc:fill="#BBDEFB">
+        <dc:Bounds x="-357" y="104" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1vsp92c_di" bpmnElement="Task_1ual27b" bioc:stroke="#1E88E5" bioc:fill="#BBDEFB">
+        <dc:Bounds x="-534" y="104" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1ecqnmg_di" bpmnElement="Task_07kxtf7" bioc:stroke="#1E88E5" bioc:fill="#BBDEFB">
+        <dc:Bounds x="-208" y="104" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1nkutuw_di" bpmnElement="Task_0ltovgm" bioc:stroke="#8E24AA" bioc:fill="#E1BEE7">
+        <dc:Bounds x="-52" y="104" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_12hwplm_di" bpmnElement="Task_072uffj" bioc:stroke="#FB8C00" bioc:fill="#FFE0B2">
+        <dc:Bounds x="98" y="104" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0w3hxq4_di" bpmnElement="SequenceFlow_0w3hxq4">
+        <di:waypoint xsi:type="dc:Point" x="-257" y="144" />
+        <di:waypoint xsi:type="dc:Point" x="-208" y="144" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-277" y="123" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1dw9iz7_di" bpmnElement="ServiceTask_1dw9iz7" bioc:stroke="#1E88E5" bioc:fill="#BBDEFB">
+        <dc:Bounds x="260" y="104" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1fwpvfm_di" bpmnElement="SequenceFlow_1fwpvfm">
+        <di:waypoint xsi:type="dc:Point" x="360" y="144" />
+        <di:waypoint xsi:type="dc:Point" x="418" y="144" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="344" y="123" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1qg92l0_di" bpmnElement="SequenceFlow_1qg92l0">
+        <di:waypoint xsi:type="dc:Point" x="518" y="144" />
+        <di:waypoint xsi:type="dc:Point" x="601" y="144" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="514.5" y="123" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_04x2chf_di" bpmnElement="SequenceFlow_04x2chf">
+        <di:waypoint xsi:type="dc:Point" x="701" y="144" />
+        <di:waypoint xsi:type="dc:Point" x="734" y="144" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="673" y="123" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1sfds7z_di" bpmnElement="SequenceFlow_1sfds7z">
+        <di:waypoint xsi:type="dc:Point" x="834" y="144" />
+        <di:waypoint xsi:type="dc:Point" x="870" y="144" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="807" y="123" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0xwyzsr_di" bpmnElement="SequenceFlow_0xwyzsr">
+        <di:waypoint xsi:type="dc:Point" x="-434" y="144" />
+        <di:waypoint xsi:type="dc:Point" x="-357" y="144" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-440.5" y="122.5" width="90" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1w7epmx_di" bpmnElement="Task_11kd6i1" bioc:stroke="#1E88E5" bioc:fill="#BBDEFB">
+        <dc:Bounds x="601" y="104" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0sqjxj0_di" bpmnElement="Task_0hinpcw" bioc:stroke="#1E88E5" bioc:fill="#BBDEFB">
+        <dc:Bounds x="734" y="104" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0850igw_di" bpmnElement="Task_0huovpl" bioc:stroke="#1E88E5" bioc:fill="#BBDEFB">
+        <dc:Bounds x="418" y="104" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

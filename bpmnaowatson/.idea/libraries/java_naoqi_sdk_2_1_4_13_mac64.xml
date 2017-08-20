@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="java-naoqi-sdk-2.1.4.13-mac64">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/main/resources/libs/java-naoqi-sdk-2.1.4.13-mac64.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
